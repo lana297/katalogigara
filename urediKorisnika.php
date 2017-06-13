@@ -42,7 +42,7 @@ else
 		<div class="darkTwo">
 		
 	
-<form method="POST" action="">
+<form method="POST" action="" enctype="multipart/form-data">
 	<h2 style="	font-family: 'Amatic SC', cursive; color:#f5e356; font-size:35px;">Unesite potrebne podatke</h2>
 			<hr style="color:#f5e356;" />
 			
@@ -79,8 +79,8 @@ else
 				Email: </br>	
 					<input type="email" name="email" size="30" value="<?php echo $kor->email[$key] ?>" /><br />
 					
-				Slika: </br>
-					<input type="text" name="pic" size="30" value="<?php echo $kor->slika[$key];?>"/><br />
+				Slika: </br></br>
+					<input type="file" name="pic"  value="<?php echo $kor->slika[$key];?>"/>  <br />
 				<hr style="color:#f5e356;" />	
 					
 				<input type="submit" name="submit_btn" class="buttonTwo" value="Spremi ažurirane podatke" />	
