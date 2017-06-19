@@ -223,11 +223,11 @@ class korisnik
 		
 	$result = $db->query("UPDATE korisnik
 						SET slika = null 
-							where korisnik_id = ".$data."");
+						where korisnik_id = ".$data."");
 		
 		if($result)
 		{
-		return $result;
+			return $result;
 		}
 		else 
 		{ 

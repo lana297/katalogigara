@@ -96,12 +96,31 @@ else
 			Slika: </br></br>
 			
 			
-
+				<?php
+				
+				$pic = $kor->slika[$key];
+				
+				
+				//var_dump($pic);
+				//var_dump($_REQUEST['id']);
+				
+				
+				if (!empty($pic))
+				{
+					$kor = new korisnik();
+					$kor->obrisi($sifra);
+					
+					echo "<img src=".$pic.">";
+					echo '<input type="button" name="del_btn" value="obriši"  />';
+				}
+				else 
+				{
+				?>
 			
 				<input type="file" name="pic" value=""/>  <br />
 					
 				<?php 
-				
+				}
 				?>
 
 				
