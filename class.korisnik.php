@@ -195,7 +195,8 @@ class korisnik
 	{
 		$db = new baza();
 		
-		$result = $db->query("UPDATE korisnik SET
+		$variabla = "UPDATE korisnik SET
+		
 								tip_id = '".$db->escape_string($newdata[1])."',
 								korisnicko_ime = '".$db->escape_string($newdata[2])."',
 								lozinka = '".$db->escape_string($newdata[3])."',
@@ -203,9 +204,11 @@ class korisnik
 								prezime = '".$db->escape_string($newdata[5])."',
 								email = '".$db->escape_string($newdata[6])."',
 								slika = '".$newdata[7]."'
-							WHERE korisnik_id = '".$newdata[0]."'");
+							WHERE korisnik_id = '".$newdata[0]."'";
+		
+		$result = $db->query($variabla);
 
-	
+	$variabla
 
 		if($result)
 		{

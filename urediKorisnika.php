@@ -2,21 +2,24 @@
 include_once('header.php');
 include_once('class.korisnik.php');
 
-var_dump($_SESSION['user_id']);
 
 if(isset($_REQUEST['del_btn']))
 	{
-	
+		
 	$delete = new korisnik();
 	$delete->deletepic($_SESSION['user_id']);
+	
 	echo "Uspjelo";
-	
 	}	
-	
 	
 if(isset($_REQUEST['submit_btn']))
 {
 	$user = new korisnik();
+
+if(isset($_FILES['pic']['name']))
+{
+	
+	
 	
 	$image = $_FILES['pic']['name'];
 	$target = "korisnici/".basename($image);
@@ -25,7 +28,9 @@ if(isset($_REQUEST['submit_btn']))
 		{ echo "Uspjelo!";}
 	else 
 		 {echo "Pohranjivanje slike nije uspjelo";}
-	
+	 
+
+	$pathh = "korisnici/".$_FILES['pic']['name'];
 
 		$update = $user->urediKorisnika( array ($_REQUEST['id'],
 											$_REQUEST['tip_id'],
@@ -34,7 +39,7 @@ if(isset($_REQUEST['submit_btn']))
 											$_REQUEST['name'],
 											$_REQUEST['lastname'],
 											$_REQUEST['email'],
-											"korisnici/".$_FILES['pic']['name'] ));
+											 $pathh));
 																				
 										
 	if($update == 1)
@@ -70,9 +75,10 @@ else
 			<hr style="color:#f5e356;" />
 			
 				<input type="hidden" name="id" value="<?php echo $sifra?>" />
-				<?PHP
+			<?PHP
+			
 				$_SESSION['user_id'] = $sifra;
-?>
+			?>
 				Tip id:</br>
 					<select name="tip_id">
 					
@@ -82,7 +88,7 @@ else
 					foreach($tipKor->tip_id as $kljuc => $tip)
 					{
 					?>					
-					<option value="<?php echo $tip;?>" <?php echo ($tip ==  $kor->tip_id[$key]) ? ' selected="selected"' : '';?>><?php echo $tipKor->tip_korisnika[$kljuc];?></option>
+						<option value="<?php echo $tip;?>" <?php echo ($tip ==  $kor->tip_id[$key]) ? ' selected="selected"' : '';?>><?php echo $tipKor->tip_korisnika[$kljuc];?></option>
 					<?php
 					}
 					?>			
@@ -110,16 +116,15 @@ else
 			<?php
 				$pic = $kor->slika[$key];
 
-				
 				if (!empty($pic))
 				{
 					echo "<img src=".$pic.">";
 					echo '<input type="submit" name="del_btn" value="obriši"  />';
 				}
-				else 
+				else
 				{
 			?>
-				<input type="file" name="pic" value=""/>  <br />
+				<input type="file" name="pic" id="pic" value=""/>  <br />
 					
 			<?php 
 				}
