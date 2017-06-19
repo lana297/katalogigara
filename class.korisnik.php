@@ -217,13 +217,16 @@ class korisnik
 			return $db->error;
 		}
 	}
-	public function obrisi($data)
+	public function deletepic($data)
 	{
 		$db = new baza();
 		
+	
 	$result = $db->query("UPDATE korisnik
 						SET slika = null 
-						where korisnik_id = ".$data."");
+						where korisnik_id = '$data'");
+						
+						
 		
 		if($result)
 		{
@@ -235,6 +238,7 @@ class korisnik
 		}
 	}
 }
+
 
 
 

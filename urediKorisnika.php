@@ -2,8 +2,18 @@
 include_once('header.php');
 include_once('class.korisnik.php');
 
+var_dump($_SESSION['user_id']);
 
-
+if(isset($_REQUEST['del_btn']))
+	{
+	
+	$delete = new korisnik();
+	$delete->deletepic($_SESSION['user_id']);
+	echo "Uspjelo";
+	
+	}	
+	
+	
 if(isset($_REQUEST['submit_btn']))
 {
 	$user = new korisnik();
@@ -37,8 +47,10 @@ if(isset($_REQUEST['submit_btn']))
 			echo "Ažuriranje korisnika nije uspjelo. Tekst greške: ". $update ."</br>";
 			echo '<a href="korisnici.php">Natrag na korisnike<a/>';
 		}
+	
+	
+	
 }
-
 else 
 {
 	$kor = new korisnik();
@@ -58,7 +70,9 @@ else
 			<hr style="color:#f5e356;" />
 			
 				<input type="hidden" name="id" value="<?php echo $sifra?>" />
-
+				<?PHP
+				$_SESSION['user_id'] = $sifra;
+?>
 				Tip id:</br>
 					<select name="tip_id">
 					
@@ -76,10 +90,8 @@ else
 					</select></br>
 					
 				Korisničko ime:	</br>
-					<input type="text" name="username" size="30" value="<?php echo $kor->korisnicko_ime[$key] ?>" /> 
-					<br /> 
-					
-				
+					<input type="text" name="username" size="30" value="<?php echo $kor->korisnicko_ime[$key] ?>" /> </br> 
+
 				Lozinka: </br>
 					<input type="password" name="password" size="30" value="<?php echo $kor->lozinka[$key];?>" /></br>
 				
@@ -92,36 +104,26 @@ else
 				Email: </br>	
 					<input type="email" name="email" size="30" value="<?php echo $kor->email[$key] ?>" /><br />
 				
-				
-			Slika: </br></br>
-			
-			
-				<?php
-				
+	
+				Slika: </br></br>
+						
+			<?php
 				$pic = $kor->slika[$key];
-				
-				
-				//var_dump($pic);
-				//var_dump($_REQUEST['id']);
-				
+
 				
 				if (!empty($pic))
 				{
-					$kor = new korisnik();
-					$kor->obrisi($sifra);
-					
 					echo "<img src=".$pic.">";
-					echo '<input type="button" name="del_btn" value="obriši"  />';
+					echo '<input type="submit" name="del_btn" value="obriši"  />';
 				}
 				else 
 				{
-				?>
-			
+			?>
 				<input type="file" name="pic" value=""/>  <br />
 					
-				<?php 
+			<?php 
 				}
-				?>
+			?>
 
 				
 			
