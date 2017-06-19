@@ -202,7 +202,7 @@ class korisnik
 								ime = '".$db->escape_string($newdata[4])."',
 								prezime = '".$db->escape_string($newdata[5])."',
 								email = '".$db->escape_string($newdata[6])."',
-								slika = '".$db->escape_string($newdata[7])."'
+								slika = '".$newdata[7]."'
 							WHERE korisnik_id = '".$newdata[0]."'");
 
 	
@@ -217,8 +217,23 @@ class korisnik
 			return $db->error;
 		}
 	}
-	
-
+	public function obrisi($data)
+	{
+		$db = new baza();
+		
+	$result = $db->query("UPDATE korisnik
+						SET slika = null 
+							where korisnik_id = ".$data."");
+		
+		if($result)
+		{
+		return $result;
+		}
+		else 
+		{ 
+			return $db->error;
+		}
+	}
 }
 
 

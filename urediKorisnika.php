@@ -3,19 +3,30 @@ include_once('header.php');
 include_once('class.korisnik.php');
 
 
+
 if(isset($_REQUEST['submit_btn']))
 {
 	$user = new korisnik();
 	
-	$update = $user->urediKorisnika( array ($_REQUEST['id'],
+	$image = $_FILES['pic']['name'];
+	$target = "korisnici/".basename($image);
+	
+	if(move_uploaded_file($_FILES['pic']['tmp_name'], $target)) 
+		{ echo "Uspjelo!";}
+	else 
+		 {echo "Pohranjivanje slike nije uspjelo";}
+	
+
+		$update = $user->urediKorisnika( array ($_REQUEST['id'],
 											$_REQUEST['tip_id'],
 											$_REQUEST['username'],
 											$_REQUEST['password'],
 											$_REQUEST['name'],
 											$_REQUEST['lastname'],
 											$_REQUEST['email'],
-											$_REQUEST['pic']	));
-											
+											"korisnici/".$_FILES['pic']['name'] ));
+																				
+										
 	if($update == 1)
 		{
 			echo "Korisnik je uspješno ažuriran!</br>";
@@ -31,7 +42,7 @@ if(isset($_REQUEST['submit_btn']))
 else 
 {
 	$kor = new korisnik();
-	$kor->korisnik_id($_REQUEST['sifrakor']);
+	$kor->korisnik_id($_REQUEST['sifrakor']); 
 	foreach ($kor->korisnik_id as $key => $sifra)
 	{}
 ?>
@@ -65,7 +76,9 @@ else
 					</select></br>
 					
 				Korisničko ime:	</br>
-					<input type="text" name="username" size="30" value="<?php echo $kor->korisnicko_ime[$key] ?>" /><br />
+					<input type="text" name="username" size="30" value="<?php echo $kor->korisnicko_ime[$key] ?>" /> 
+					<br /> 
+					
 				
 				Lozinka: </br>
 					<input type="password" name="password" size="30" value="<?php echo $kor->lozinka[$key];?>" /></br>
@@ -78,11 +91,23 @@ else
 					
 				Email: </br>	
 					<input type="email" name="email" size="30" value="<?php echo $kor->email[$key] ?>" /><br />
+				
+				
+			Slika: </br></br>
+			
+			
+
+			
+				<input type="file" name="pic" value=""/>  <br />
 					
-				Slika: </br></br>
-					<input type="file" name="pic"  value="<?php echo $kor->slika[$key];?>"/>  <br />
-				<hr style="color:#f5e356;" />	
-					
+				<?php 
+				
+				?>
+
+				
+			
+			
+				<hr style="color:#f5e356;" />		
 				<input type="submit" name="submit_btn" class="buttonTwo" value="Spremi ažurirane podatke" />	
 </form>				
 		</div>
