@@ -6,33 +6,46 @@ include_once('class.korisnik.php');
 if(isset($_REQUEST['del_btn']))
 	{
 		
-	$delete = new korisnik();
-	$delete->deletepic($_SESSION['user_id']);
+		$delete = new korisnik();
+		$del = $delete->deletepic($_SESSION['user_id']);
 	
-	echo "Uspjelo";
+		if ($del == 1) echo "Uspjelo";
+		else echo $del;
 	}	
 	
+	////////////////////
 if(isset($_REQUEST['submit_btn']))
 {
+	$pathh = "";
 	$user = new korisnik();
 
-if(isset($_FILES['pic']['name']))
-{
 	
 	
+	if(isset($_FILES['pic']['name']))
+	{
+		
+	$pathh = "korisnici/" . $_FILES['pic']['name'];
+	$target = __DIR__ . "/korisnici/";
+	$tmp_name = $_FILES['pic']['tmp_name'];
+	$name = basename($_FILES["pic"]["name"]);
 	
-	$image = $_FILES['pic']['name'];
-	$target = "korisnici/".basename($image);
 	
-	if(move_uploaded_file($_FILES['pic']['tmp_name'], $target)) 
-		{ echo "Uspjelo!";}
+	if (move_uploaded_file($tmp_name, "$target/$name")) 
+	
+	{
+		echo "Uspjelo!";
+	}
+	
 	else 
-		 {echo "Pohranjivanje slike nije uspjelo";}
-	 
+	{
+		echo "Pohranjivanje slike nije uspjelo";
+	}
 
-	$pathh = "korisnici/".$_FILES['pic']['name'];
+	} 
 
-		$update = $user->urediKorisnika( array ($_REQUEST['id'],
+
+	
+	$update = $user->urediKorisnika( array ($_REQUEST['id'],
 											$_REQUEST['tip_id'],
 											$_REQUEST['username'],
 											$_REQUEST['password'],
@@ -52,10 +65,9 @@ if(isset($_FILES['pic']['name']))
 			echo "Ažuriranje korisnika nije uspjelo. Tekst greške: ". $update ."</br>";
 			echo '<a href="korisnici.php">Natrag na korisnike<a/>';
 		}
-	
-	
-	
-}
+}	
+//////////////////////
+
 else 
 {
 	$kor = new korisnik();
@@ -124,7 +136,7 @@ else
 				else
 				{
 			?>
-				<input type="file" name="pic" id="pic" value=""/>  <br />
+				<input type="file" name="pic" id="pic" value="">
 					
 			<?php 
 				}
