@@ -90,7 +90,7 @@ class korisnik
 		}							
 	}
 	
-	public function login($username, $password)
+	public function login($email, $password)
 	{
 		$db = new baza();
 		
@@ -103,7 +103,7 @@ class korisnik
 											slika,
 											tip_id
 									FROM korisnik
-							WHERE korisnicko_ime = '".$username."'
+							WHERE email = '".$email."'
 							AND lozinka = '".$password."'");
 							
 				
@@ -133,6 +133,7 @@ class korisnik
 		$result = $db->query("INSERT INTO korisnik 
 							(  tip_id,
 								korisnicko_ime,
+								lozinka,
 								ime,
 								prezime,
 								email,
@@ -142,7 +143,8 @@ class korisnik
 									'".$korisnickiPodaci[2]."',
 									'".$korisnickiPodaci[3]."',
 									'".$korisnickiPodaci[4]."',
-									'".$korisnickiPodaci[5]."') " );
+									'".$korisnickiPodaci[5]."',
+									'".$korisnickiPodaci[6]."') " );
 		if ($db->errno == 1062)
 		{
 			return false;
@@ -191,51 +193,45 @@ class korisnik
 		}					
 	}
 	
-	public function urediKorisnika($newdata)
+	public function noPass($newdata)
 	{
 		$db = new baza();
 		
-		//$variabla = "UPDATE korisnik SET
 		
-						//		tip_id = $db->escape_string($newdata[1]),
-						//		korisnicko_ime = $db->escape_string($newdata[2]),
-						//		lozinka = $db->escape_string($newdata[3]),
-						//		ime = $db->escape_string($newdata[4]),
-						//		prezime = $db->escape_string($newdata[5]),
-						//		email = $db->escape_string($newdata[6]),
-						//		slika = $newdata[7]
-						//WHERE korisnik_id = $newdata[0]   ";  
-							
-							
-							
-		//Notice: Undefined property: baza::$escape_string 
-		//in C:\xampp\htdocs\php\proba\class.korisnik.php on line 200-205	
-
-//Ažuriranje korisnika nije uspjelo. Tekst greške: You have an error in your SQL syntax; 
-//check the manual that corresponds to your MariaDB server version for the right syntax 
-//to use near '@foi.hr), slika = korisnici/ WHERE korisnik_id = 22' at line 8		
-
-					
-		/////////////////////////////////////////
-				
-	//	$variabla = "UPDATE korisnik SET
+		$variabla = "UPDATE korisnik SET
+								tip_id = '".$db->escape_string($newdata[1])."',
+								korisnicko_ime = '".$db->escape_string($newdata[2])."',
+								ime = '".$db->escape_string($newdata[4])."',
+								prezime = '".$db->escape_string($newdata[5])."',
+								email = '".$db->escape_string($newdata[6])."' ";
+		if(!empty($newdata[7]))
+		{
+		$variabla .= ",slika = '".$newdata[7]."'";	
+		}			
+		$variabla .= " WHERE korisnik_id = '".$newdata[0]."'";			
 		
-							//	tip_id = '.$db->escape_string($newdata[1]).',
-							//	korisnicko_ime = '$db->escape_string($newdata[2])',
-							//	lozinka = '$db->escape_string($newdata[3])',
-							//	ime = '$db->escape_string($newdata[4])',
-							//	prezime = '$db->escape_string($newdata[5])',
-							//	email = '$db->escape_string($newdata[6])',
-							//	slika = '$newdata[7]'
-							//WHERE korisnik_id = '$newdata[0]'   ";  	
-
-	//	Notice: Undefined property: baza::$escape_string in C:\xampp\htdocs\php\proba\class.korisnik.php on line 223-228						
-							
-							
-			////////////////////				
 		
+		
+		$result = $db->query($variabla);
 
 
+		if($result)
+		{
+			return $result;
+		}
+		else
+		{
+
+			return $db->error;
+		}
+	}
+	
+	////
+	
+		public function urediKorisnikaPass($newdata)
+	{
+		$db = new baza();
+		
 		
 		$variabla = "UPDATE korisnik SET
 								tip_id = '".$db->escape_string($newdata[1])."',
@@ -250,13 +246,10 @@ class korisnik
 		}			
 		$variabla .= " WHERE korisnik_id = '".$newdata[0]."'";			
 		
-		//var_dump($variabla);
-		
 		
 		
 		$result = $db->query($variabla);
 
-	//$variabla;
 
 		if($result)
 		{
@@ -268,6 +261,9 @@ class korisnik
 			return $db->error;
 		}
 	}
+	
+	
+	////
 	public function deletepic($data)
 	{
 		$db = new baza();
@@ -275,7 +271,7 @@ class korisnik
 	
 	$result = $db->query("UPDATE korisnik
 						SET slika = null 
-						where korisnik_id = '$data'");
+						where korisnik_id = '".$data."'");
 						
 						
 		
@@ -288,6 +284,36 @@ class korisnik
 			return $db->error;
 		}
 	}
+	
+	public function setNewPass($data)
+	{
+		$db = new baza();
+		
+		$result = $db->query("UPDATE korisnik
+							SET lozinka = '".$data[4]."'
+							WHERE email = '".$data[7]."'");
+							
+		var_dump("UPDATE korisnik
+					//		SET lozinka = '".$data[4]."'
+					//		WHERE email = '".$data[7]."'");	
+
+		var_dump($data[4]);	
+echo "<hr/>";		
+		var_dump($data[7]);						
+echo "<hr/>";		
+		if($result)
+		{
+			return $result;
+		}
+		else
+		{
+			return $db->error;
+		}
+	}
+	
+	
+	
+	
 }
 
 

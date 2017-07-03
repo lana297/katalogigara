@@ -22,9 +22,14 @@ include_once('class.htmltable.php');
 			$korisnik->sviKorisnici();
 			foreach( $korisnik->korisnik_id as $key=>$sifra)
 			{
+				
+				$_SESSION['updateid'] = $sifra;
+				
 			$uredi = '<a href="urediKorisnika.php?sifrakor='.$sifra.'" class="button"style="font-size:20px; text-decoration: none;">Uredi</a>';
 			$slika = "<img src=".$korisnik->slika[$key]." style='max-height:70px; max-width:40px;' />";
 			$tablica[]= array( $sifra, $korisnik->korisnicko_ime[$key],  $korisnik->prezime[$key], $korisnik->email[$key],  $korisnik->tip_id[$key], $slika, $uredi);
+		
+
 			}
 			
 		
