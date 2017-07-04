@@ -27,6 +27,8 @@ var_dump($_SERVER['REQUEST_URI']);
 if(isset($_REQUEST['submit']))
 {
 	
+
+	
 	$emailvalid = TRUE;
 	$passvalid = TRUE;
 	$errorFile = "";
@@ -48,7 +50,7 @@ if(isset($_REQUEST['submit']))
 			{
 				$errorFile = "email je pogrešan";
 				$emailvalid = FALSE;
-				header("Location:newpass.php?error=notvalid");
+				//header("Location:newpass.php?error=notvalid");
 			}
 		}
 	}
@@ -61,7 +63,7 @@ if(isset($_REQUEST['submit']))
 		}
 		$_SESSION['passError'] = $greske;
 		$errorFile = "lozinka je pogrešna";
-		header("Location:newpass.php?error=passerror");
+		//header("Location:newpass.php?error=passerror");
 	}
 	
 	if($emailvalid === TRUE)
@@ -76,14 +78,34 @@ if(isset($_REQUEST['submit']))
 		$update = $user->setNewPass( array ("",
 											"",
 											"",
-											substr(crypt($_REQUEST['password'], $salt), 0, 45)),
+											"",
 											"",
 											"",
 											$_REQUEST['email'],
-											"");
+											"",
+											substr(crypt($_REQUEST['password'], $salt), 0, 45)));
 											
-		//var_dump(substr(crypt($_REQUEST['password'], $salt), 0, 45));									
+		mail($_REQUEST['email'], "Aktivacija", "Vaš kod za aktivaciju je dostupan na sljedecem linku: http://localhost/0PRAKSA/0307/proba/aktivacija.php?email=".substr(crypt($_REQUEST['email'], $salt), 0, 45));									
+		
+		echo "vardump kriptiranog maila";
+		var_dump(substr(crypt($_REQUEST['email'], $salt), 0, 45));									
 		//var_dump($_REQUEST['email']);									
+		
+			////////////////////////////podaci za aktivaciju//////////////
+			
+			
+			
+			
+	$_SESSION['authmail'] = $_REQUEST['email'];
+	$_SESSION['authpass'] = substr(crypt($_REQUEST['password'], $salt), 0, 45);
+	
+
+	echo "session authmail";
+	var_dump($_SESSION['authmail']);
+	echo "session authpass";
+	var_dump($_SESSION['authpass']);
+	
+	////////////////////////////////////////////////////////////////////////////
 	
 	
 	if($update == 1)
@@ -125,7 +147,7 @@ else
 						?>	
 				</br>
 				Unesite novu lozinku: </br>
-				<input type="password" name="password" size="30" value="" /></br>
+				<input type="password" name="password" id="password" size="30" value="" /></br>
 					<?php
 					if(isset($passerrors))
 						{
@@ -138,7 +160,11 @@ else
 							}
 						}
 					?>
-					<hr style="color:#f5e356;" />		
+						
+					<p id="jsGreskaPonovljenaLozinka"></p>
+				Unesite ponovljenu lozinku: </br>
+				<input type="password" name="repeatPassword" id="repeatPassword" size="30" value="" /></br>
+						<hr style="color:#f5e356;" />
 					<input type="submit" name="submit" class="buttonTwo" value="Spremi ažurirane podatke" />	
 			</form>	
 					
@@ -146,8 +172,11 @@ else
 	</div>
 </section>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+<script src="newpass.js"></script> <!-- na kraj jer je brzi od htmla, te je to jedini nacin da budemo sigurni da ce se ucitati svi elementi
 
 <?php 
-}
+} 
 include_once('footer.html'); 
 ?>		

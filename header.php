@@ -48,7 +48,7 @@
 		$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		if(strpos($url, 'error=wrongpass') !== FALSE )
 		{
-			$_SESSION['new'] = "<a class='link' href='newpass.php?'>Zaboravljena lozinka?</a>";
+			$_SESSION['new'] = "</br>Moguće je da niste validirali svoju lozinku. Provjerite e-mail i pokušajte ponovo! </br> <a class='link' href='newpass.php?'>Zaboravljena lozinka?</a>";
 			$new = $_SESSION['new'];
 		}		
 				
@@ -100,6 +100,18 @@
 							$_SESSION['aktivni_korisnik_id']= $korisnik->korisnik_id;
 							$_SESSION['aktivni_korisnik_tip']= $korisnik->tip_id;
 							
+							if ($_POST['remember']==1) // postavljanje ako je checkbox odabran
+							{
+								setcookie("email", $_POST['email'], time()+60*60*24*7*52);
+								setcookie("password", $_POST['password'], time()+60*60*24*7*52);
+							}
+							else //unistavanje cookiea ili vrijednost null
+							{
+								setcookie("email", "");
+								setcookie("password", "");
+							}
+							
+							
 							if ($_SESSION['aktivni_korisnik_tip'] == 0)
 								header("Location:korisnici.php");
 							elseif ($_SESSION['aktivni_korisnik_tip'] == 1)
@@ -109,6 +121,8 @@
 					}
 					else 
 					{
+						setcookie("email", "");
+						setcookie("password", "");
 						header("Location:index.php?error=wrongpass");
 						exit();
 					}	
@@ -117,11 +131,15 @@
 					
 			 ?>
 			<form method="POST" action="">
-				<input type="text" name="email" placeholder="Unesite email" value=""  />
-				<input type="password" name="password" placeholder="Unesite lozinku" value=""  />
+				<input type="text" name="email" placeholder="Unesite email" value="<?php 
+					if (isset($_COOKIE['email'])) echo $_COOKIE['email'];
+				?>"  />
+				<input type="password" name="password" placeholder="Unesite lozinku" value="<?php 
+					if(isset($_COOKIE['password'])) echo $_COOKIE['password'];
+				?>"  />
 				<input type="submit" name="submit_btn" class="button" value="Prijavi se" />
 				</br>
-				<input type="checkbox" name="remember" /> Zapamti me
+				<input type="checkbox" name="remember" value="1"/> Zapamti me
 				<?php
 					if(isset($new))
 					{

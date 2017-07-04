@@ -49,12 +49,7 @@ include_once('class.validpass.php');
 				$obj = new passvalidation();
 				$passvalid = $obj->check($_REQUEST);
 				
-				//var_dump($nesto);
-				//var_dump($obj->getMsg());
-				////// ovdje bi trebalo napraviti neki foreach dole u formi (linija 196) da se dobije greska (dakle vardumpa ih dobro), 
-						//ili mogu napraviti da prikaze obje greske ako su dvije, samo bi ih trebalo kroz foreach izvuc  
-						
-				
+			
 				
 				
 				
@@ -150,11 +145,13 @@ include_once('class.validpass.php');
 				$salt = '$2y$11$' . $nekiString;
 				$registracija = $user->dodajKorisnika (array ( 	$_REQUEST['tip'],
 																	$_REQUEST['username'],
-																	substr(crypt($_REQUEST['password'], $salt), 0, 45),
+																	substr(crypt($_REQUEST['password'], $salt), 0, 45),																	
 																	$_REQUEST['name'],
 																	$_REQUEST['lastname'],
 																	$_REQUEST['email'],
-																	$fileDestination));
+																	$fileDestination,
+																	"",
+																	1));
 				if ($registracija)
 				{
 					echo "Registracija uspjela!<br />";

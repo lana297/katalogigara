@@ -14,6 +14,8 @@ class korisnik
 	public $top;
 	public $tip_id;
 	public $tip_korisnika;
+	public $tempPass;
+	public $flag;
 	
 	public function tipKorisnikaNaziv()
 	{
@@ -93,7 +95,7 @@ class korisnik
 	public function login($email, $password)
 	{
 		$db = new baza();
-		
+		$flag = 1;
 		$res = $db->query("SELECT korisnik_id,
 											korisnicko_ime,
 											lozinka,
@@ -104,7 +106,8 @@ class korisnik
 											tip_id
 									FROM korisnik
 							WHERE email = '".$email."'
-							AND lozinka = '".$password."'");
+							AND lozinka = '".$password."' 
+							AND flag = ".$flag." ");
 							
 				
 		if ( $res->num_rows > 0 )
@@ -137,14 +140,18 @@ class korisnik
 								ime,
 								prezime,
 								email,
-								slika  )
+								slika,
+								tempPass,
+								flag)
 							VALUES( '".$korisnickiPodaci[0]."',
 									'".$korisnickiPodaci[1]."',
 									'".$korisnickiPodaci[2]."',
 									'".$korisnickiPodaci[3]."',
 									'".$korisnickiPodaci[4]."',
 									'".$korisnickiPodaci[5]."',
-									'".$korisnickiPodaci[6]."') " );
+									'".$korisnickiPodaci[6]."',
+									'".$korisnickiPodaci[7]."',
+									'".$korisnickiPodaci[8]."') " );
 		if ($db->errno == 1062)
 		{
 			return false;
@@ -288,19 +295,14 @@ class korisnik
 	public function setNewPass($data)
 	{
 		$db = new baza();
-		
+		$flag = 0;
 		$result = $db->query("UPDATE korisnik
-							SET lozinka = '".$data[4]."'
-							WHERE email = '".$data[7]."'");
+							SET lozinka = '".$data[3]."',
+							tempPass = '".$data[8]."',
+							flag = ".$flag."
+							WHERE email = '".$data[6]."'");
 							
-		var_dump("UPDATE korisnik
-					//		SET lozinka = '".$data[4]."'
-					//		WHERE email = '".$data[7]."'");	
 
-		var_dump($data[4]);	
-echo "<hr/>";		
-		var_dump($data[7]);						
-echo "<hr/>";		
 		if($result)
 		{
 			return $result;
@@ -312,6 +314,55 @@ echo "<hr/>";
 	}
 	
 	
+	public function aktivirajKorisnika($email, $kod)
+	{
+		$db = new baza();
+		$flag = 0;
+		$res = $db->query("SELECT korisnik_id,
+									korisnicko_ime,
+									lozinka,
+									ime,
+									prezime,
+									email,
+									slika,
+									tip_id,
+									tempPass,
+									flag
+							FROM korisnik
+							WHERE email = '".$email."'
+							AND tempPass = '".$kod."' 
+							AND flag = ".$flag." ");
+			
+		if ($res->num_rows == 1){
+			$flag = 1;
+			$result = $db->query("UPDATE korisnik
+							SET lozinka = '".$kod."',
+							flag= ".$flag."							
+							WHERE email = '".$email."'" );
+			return true;
+		} 
+		else 
+		{
+			return false;
+		}							
+	}
+	
+	public function emailTaken($email)
+	{
+		$db = new baza();
+		
+		$res = $db->query("SELECT korisnik_id from korisnik
+							WHERE email = '".$email."'");
+							
+		if($res->num_rows == 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 	
 	
 }
